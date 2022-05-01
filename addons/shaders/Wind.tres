@@ -1,21 +1,8 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=2]
 
-[sub_resource type="Shader" id=2]
-code = "shader_type canvas_item;
-
-uniform vec2 wind_power = vec2(1.0, 0.0);
-uniform float speed = 3.0;
-
-void fragment() {
-	vec2 pixel_size = vec2(wind_power.x / float(textureSize(TEXTURE, 0).x), wind_power.y / float(textureSize(TEXTURE, 0).y));
-	vec4 sprite_color = texture(TEXTURE, UV);
-	
-	float time = TIME * speed;
-	float v = sin(time);
-	COLOR = texture(TEXTURE, UV + vec2(pixel_size.x, pixel_size.y) * v);
-}"
+[ext_resource path="res://addons/shaders/Wind.shader" type="Shader" id=1]
 
 [resource]
-shader = SubResource( 2 )
+shader = ExtResource( 1 )
 shader_param/wind_power = Vector2( 1, 0 )
 shader_param/speed = 3.0

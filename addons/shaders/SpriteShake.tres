@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://addons/shaders/SpriteShake.gdshader" type="Shader" id=1]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/pattern = 0
+shader_param/shake_speed = 11.0
+shader_param/shake_size = 0.2
+shader_param/shake_move_speed = 15.0
+shader_param/shake_move_direction = Vector2( 0.8, 0.9 )
+shader_param/shake_move_size = Vector2( 0.2, 0.2 )
