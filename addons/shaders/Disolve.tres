@@ -1,0 +1,211 @@
+[gd_resource type="ShaderMaterial" load_steps=21 format=2]
+
+[ext_resource path="res://addons/shaders/NoiseTexture.tres" type="Texture" id=1]
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=11]
+output_port_for_preview = 0
+function = 0
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=12]
+function = 12
+
+[sub_resource type="VisualShaderNodeScalarOp" id=13]
+default_input_values = [ 0, 0.0, 1, 0.2 ]
+operator = 1
+
+[sub_resource type="VisualShaderNodeScalarOp" id=15]
+output_port_for_preview = 0
+operator = 9
+
+[sub_resource type="VisualShaderNodeScalarOp" id=16]
+output_port_for_preview = 0
+operator = 9
+
+[sub_resource type="VisualShaderNodeScalarOp" id=17]
+output_port_for_preview = 0
+operator = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id=18]
+output_port_for_preview = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeColorOp" id=20]
+
+[sub_resource type="VisualShaderNodeScalarUniform" id=21]
+uniform_name = "RibbleSize"
+
+[sub_resource type="VisualShaderNodeTexture" id=4]
+source = 2
+
+[sub_resource type="VisualShaderNodeColorUniform" id=22]
+output_port_for_preview = 0
+uniform_name = "RibbleColor"
+
+[sub_resource type="VisualShaderNodeScalarOp" id=23]
+default_input_values = [ 0, 0.0, 1, 2.5 ]
+operator = 2
+
+[sub_resource type="VisualShaderNodeScalarUniform" id=24]
+uniform_name = "DisolveSpeed"
+
+[sub_resource type="VisualShaderNodeTextureUniform" id=25]
+uniform_name = "NoiseTexture"
+
+[sub_resource type="VisualShaderNodeInput" id=5]
+output_port_for_preview = 0
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeInput" id=7]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeScalarOp" id=8]
+output_port_for_preview = 0
+default_input_values = [ 0, 0.0, 1, 1.0 ]
+operator = 2
+
+[sub_resource type="VisualShaderNodeInput" id=14]
+output_port_for_preview = 0
+input_name = "time"
+
+[sub_resource type="VisualShader" id=2]
+code = "shader_type canvas_item;
+uniform sampler2D NoiseTexture;
+uniform float DisolveSpeed;
+uniform float RibbleSize;
+uniform vec4 RibbleColor : hint_color;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Input:3
+	vec3 n_out3p0 = vec3(UV, 0.0);
+
+// Texture:2
+	vec3 n_out2p0;
+	float n_out2p1;
+	{
+		vec4 _tex_read = texture(TEXTURE, n_out3p0.xy);
+		n_out2p0 = _tex_read.rgb;
+		n_out2p1 = _tex_read.a;
+	}
+
+// Input:5
+	vec3 n_out5p0 = vec3(UV, 0.0);
+
+// TextureUniform:24
+	vec3 n_out24p0;
+	float n_out24p1;
+	{
+		vec4 n_tex_read = texture(NoiseTexture, n_out5p0.xy);
+		n_out24p0 = n_tex_read.rgb;
+		n_out24p1 = n_tex_read.a;
+	}
+
+// Input:9
+	float n_out9p0 = TIME;
+
+// ScalarUniform:23
+	float n_out23p0 = DisolveSpeed;
+
+// ScalarOp:22
+	float n_out22p0 = n_out9p0 * n_out23p0;
+
+// ScalarFunc:10
+	float n_out10p0 = sin(n_out22p0);
+
+// ScalarFunc:11
+	float n_out11p0 = abs(n_out10p0);
+
+// ScalarOp:13
+	float n_out13p0 = step(dot(n_out24p0, vec3(0.333333, 0.333333, 0.333333)), n_out11p0);
+
+// ScalarUniform:19
+	float n_out19p0 = RibbleSize;
+
+// ScalarOp:12
+	float n_out12p0 = n_out11p0 - n_out19p0;
+
+// ScalarOp:14
+	float n_out14p0 = step(dot(n_out24p0, vec3(0.333333, 0.333333, 0.333333)), n_out12p0);
+
+// ScalarOp:15
+	float n_out15p0 = n_out13p0 - n_out14p0;
+
+// ColorUniform:20
+	vec3 n_out20p0 = RibbleColor.rgb;
+	float n_out20p1 = RibbleColor.a;
+
+// VectorOp:16
+	vec3 n_out16p0 = vec3(n_out15p0) * n_out20p0;
+
+// ColorOp:18
+	vec3 n_out18p0 = vec3(1.0) - (vec3(1.0) - n_out2p0) * (vec3(1.0) - n_out16p0);
+
+// ScalarOp:6
+	float n_out6p0 = n_out2p1 * n_out13p0;
+
+// Output:0
+	COLOR.rgb = n_out18p0;
+	COLOR.a = n_out6p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( 171.484, 33.588 )
+mode = 1
+flags/light_only = false
+nodes/vertex/0/position = Vector2( 1120, 160 )
+nodes/fragment/0/position = Vector2( 2440, -60 )
+nodes/fragment/2/node = SubResource( 4 )
+nodes/fragment/2/position = Vector2( 1040, -100 )
+nodes/fragment/3/node = SubResource( 5 )
+nodes/fragment/3/position = Vector2( 540, -120 )
+nodes/fragment/5/node = SubResource( 7 )
+nodes/fragment/5/position = Vector2( -100, 140 )
+nodes/fragment/6/node = SubResource( 8 )
+nodes/fragment/6/position = Vector2( 1440, -20 )
+nodes/fragment/9/node = SubResource( 14 )
+nodes/fragment/9/position = Vector2( -340, 360 )
+nodes/fragment/10/node = SubResource( 11 )
+nodes/fragment/10/position = Vector2( 280, 400 )
+nodes/fragment/11/node = SubResource( 12 )
+nodes/fragment/11/position = Vector2( 620, 480 )
+nodes/fragment/12/node = SubResource( 13 )
+nodes/fragment/12/position = Vector2( 900, 600 )
+nodes/fragment/13/node = SubResource( 15 )
+nodes/fragment/13/position = Vector2( 980, 160 )
+nodes/fragment/14/node = SubResource( 16 )
+nodes/fragment/14/position = Vector2( 1180, 520 )
+nodes/fragment/15/node = SubResource( 17 )
+nodes/fragment/15/position = Vector2( 1440, 280 )
+nodes/fragment/16/node = SubResource( 18 )
+nodes/fragment/16/position = Vector2( 2260, 240 )
+nodes/fragment/18/node = SubResource( 20 )
+nodes/fragment/18/position = Vector2( 1840, -140 )
+nodes/fragment/19/node = SubResource( 21 )
+nodes/fragment/19/position = Vector2( 560, 820 )
+nodes/fragment/20/node = SubResource( 22 )
+nodes/fragment/20/position = Vector2( 1880, 480 )
+nodes/fragment/22/node = SubResource( 23 )
+nodes/fragment/22/position = Vector2( -20, 380 )
+nodes/fragment/23/node = SubResource( 24 )
+nodes/fragment/23/position = Vector2( -240, 680 )
+nodes/fragment/24/node = SubResource( 25 )
+nodes/fragment/24/position = Vector2( 460, 120 )
+nodes/fragment/connections = PoolIntArray( 3, 0, 2, 0, 2, 1, 6, 0, 6, 0, 0, 1, 10, 0, 11, 0, 11, 0, 12, 0, 12, 0, 14, 1, 14, 0, 15, 1, 13, 0, 15, 0, 13, 0, 6, 1, 15, 0, 16, 0, 2, 0, 18, 0, 18, 0, 0, 0, 16, 0, 18, 1, 19, 0, 12, 1, 20, 0, 16, 1, 11, 0, 13, 1, 9, 0, 22, 0, 22, 0, 10, 0, 23, 0, 22, 1, 5, 0, 24, 0, 24, 0, 13, 0, 24, 0, 14, 0 )
+
+[resource]
+shader = SubResource( 2 )
+shader_param/DisolveSpeed = 1.0
+shader_param/RibbleSize = 0.05
+shader_param/RibbleColor = Color( 0.976471, 0.470588, 0.470588, 1 )
+shader_param/NoiseTexture = ExtResource( 1 )
